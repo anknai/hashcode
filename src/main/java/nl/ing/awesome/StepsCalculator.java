@@ -78,6 +78,7 @@ public class StepsCalculator {
     void assignVehicle() {
         ride.setCost(cost);
         ride.setWeight(weight);
+        ride.setScore(score);
         ride.setVehicleStartPointStep(vehicle.getNextFreeStep());
         ride.setRideStartPointStep(vehicle.getNextFreeStep() + pickupSteps());
         ride.setActualStartStep(ride.getRideStartPointStep() + waitSteps());

@@ -24,6 +24,8 @@ public class Ride {
 
     private int weight;
 
+    private int score;
+
     private int vehicleStartPointStep;
 
     private int rideStartPointStep;

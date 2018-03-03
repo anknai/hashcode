@@ -19,14 +19,14 @@ class Simulation {
 
     private boolean more = true;
 
-    void simulate(String inputFile, String outputFile, String historyFile) {
-        input = FileReaderWriter.readFile(inputFile);
+    void simulate(String testCase) {
+        input = FileReaderWriter.readFile(testCase);
         List<Vehicle> vehicles = allVehicles();
         while (more) {
             start(vehicles, input.getRides());
         }
-        FileReaderWriter.writeFile(outputFile, vehicles);
-        FileReaderWriter.writeVehicleHistory(historyFile, vehicles, input.getTotalSteps());
+        FileReaderWriter.writeFile(testCase, vehicles);
+        FileReaderWriter.writeVehicleHistory(testCase, vehicles, input.getTotalSteps());
     }
 
     private List<Vehicle> allVehicles() {

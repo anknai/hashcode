@@ -1,17 +1,11 @@
 package nl.ing.awesome;
 
-import nl.ing.awesome.domain.Grid;
-import nl.ing.awesome.domain.Input;
-import nl.ing.awesome.domain.Position;
-import nl.ing.awesome.domain.Ride;
-import nl.ing.awesome.domain.Vehicle;
+import nl.ing.awesome.domain.*;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -19,11 +13,15 @@ import java.util.List;
  */
 class FileReaderWriter {
 
+    private static final String IN_FOLDER = "in/";
+    private static final String OUT_FOLDER = "out/";
+
     private static int simulationSteps = 500;
 
     private static ClassLoader classLoader = FileReaderWriter.class.getClassLoader();
 
-    static Input readFile(final String inputFile) {
+    static Input readFile(final String testCase) {
+        String inputFile = in(testCase);
         File file = new File(classLoader.getResource(inputFile).getFile());
         try (BufferedReader reader = new BufferedReader(new java.io.FileReader(file))) {
             String line;
@@ -67,7 +65,8 @@ class FileReaderWriter {
         return null;
     }
 
-    static void writeFile(String outputFile, final List<Vehicle> vehicleList) {
+    static void writeFile(String testCase, final List<Vehicle> vehicleList) {
+        String outputFile = out(testCase);
         File output = new File(outputFile);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(output))) {
             vehicleList.iterator().forEachRemaining(vehicle -> {
@@ -84,18 +83,37 @@ class FileReaderWriter {
         }
     }
 
-    static void writeVehicleHistory(String historyFile, List<Vehicle> vehicles, int simulationSteps) {
+    static void writeVehicleHistory(String testCase, List<Vehicle> vehicles, int simulationSteps) {
+        String historyFile = history(testCase);
+        int score = 0;
         FileReaderWriter.simulationSteps = simulationSteps;
         File history = new File(historyFile);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(history))) {
             for (Vehicle vehicle : vehicles) {
                 writer.write(vehicle.getVehicleNumber() + "-");
                 for (Ride ride : vehicle.getRides()) {
+                    score += ride.getScore();
                     writer.write(ride.getRideNumber() + pick(ride) + wait(ride) + ride(ride));
                 }
                 writer.write('\n');
                 writer.flush();
             }
+            writeScore(testCase, score);
+            writer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void writeScore(final String testCase, final int score) {
+        File scoreFile = new File(scoreFile(testCase));
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+
+        String scoreLine = dateFormat.format(Calendar.getInstance().getTime()) + "\n" + testCase + ": " + score + "\n\n";
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(scoreFile, true))) {
+            writer.append(scoreLine);
+            writer.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -128,4 +146,21 @@ class FileReaderWriter {
         }
         return builder.toString();
     }
+
+    private static String in(String which) {
+        return IN_FOLDER + which + ".in";
+    }
+
+    private static String out(String which) {
+        return OUT_FOLDER + which + ".out";
+    }
+
+    private static String history(String which) {
+        return OUT_FOLDER + which + ".hi";
+    }
+
+    private static String scoreFile(String which) {
+        return OUT_FOLDER + "score.sc";
+    }
+
 }
