@@ -21,8 +21,10 @@ class FileReaderWriter {
 
     private static int simulationSteps = 500;
 
+    private static ClassLoader classLoader = FileReaderWriter.class.getClassLoader();
+
     static Input readFile(final String inputFile) {
-        File file = new File(inputFile);
+        File file = new File(classLoader.getResource(inputFile).getFile());
         try (BufferedReader reader = new BufferedReader(new java.io.FileReader(file))) {
             String line;
 

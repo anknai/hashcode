@@ -6,7 +6,8 @@ import org.junit.Test;
  * Created on 1-3-18.
  */
 public class SimulationTest {
-    private static final String FOLDER = "/tmp/hc/";
+    private static final String IN_FOLDER = "in/";
+    private static final String OUT_FOLDER = "out/";
     private static final String A_FILE = "a_example";
     private static final String B_FILE = "b_should_be_easy";
     private static final String C_FILE = "c_no_hurry";
@@ -41,14 +42,14 @@ public class SimulationTest {
     }
 
     private String in(String which) {
-        return FOLDER + which + ".in";
+        return IN_FOLDER + which + ".in";
     }
 
     private String out(String which) {
-        return FOLDER + which + ".out";
+        return OUT_FOLDER + which + ".out";
     }
 
     private String history(String which) {
-        return FOLDER + which + ".hi";
+        return OUT_FOLDER + which + ".hi";
     }
 }
